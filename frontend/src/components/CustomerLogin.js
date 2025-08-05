@@ -16,7 +16,7 @@ export default function CustomerLogin() {
             localStorage.setItem("name", res.data.name);
             localStorage.setItem("email", email);
             setMessage("Login successful!");
-            window.location.href = "/customer-history";
+            window.location.href = "/search-driver";
         } catch (err) {
             setMessage(err.response?.data?.error || "Login failed");
         }

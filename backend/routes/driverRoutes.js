@@ -23,6 +23,15 @@ router.get("/search", async (req, res) => {
     }
 });
 
+router.get("/getAll", async (req, res) => {
+    try {
+        const drivers = await Driver.find();
+        res.json(drivers);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 

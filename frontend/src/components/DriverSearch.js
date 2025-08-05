@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useNavigation } from "react-router-dom";
@@ -24,6 +24,17 @@ export default function DriverSearch() {
         navigate("/booking", { state: { driverId, driverName } });
     };
 
+    const fetchAll=async()=>{
+        try {
+            const res = await axios.get("http://localhost:5000/api/drivers/getAll");
+            setDrivers(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    }   
+    useEffect(() => {
+        fetchAll();
+    }, []);
 
     return (
         <Container className="mt-4">
