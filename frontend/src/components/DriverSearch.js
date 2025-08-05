@@ -71,19 +71,19 @@ export default function DriverSearch() {
                             <Card className="shadow-sm h-100">
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title className="text-primary fs-4 mb-3">{driver.name}</Card.Title>
-                                    
+
                                     <div className="mb-2 d-flex align-items-center text-muted">
-                                        <FaStar className="me-2 text-warning" /> 
+                                        <FaStar className="me-2 text-warning" />
                                         <span><strong>Experience: </strong>{driver.experience} years</span>
                                     </div>
 
                                     <div className="mb-2 d-flex align-items-center text-muted">
-                                        <FaIdCard className="me-2" /> 
+                                        <FaIdCard className="me-2" />
                                         <span><strong>License: </strong>{driver.licenseNumber}</span>
                                     </div>
 
                                     <div className="mb-2 d-flex align-items-center text-muted">
-                                        <FaCar className="me-2" /> 
+                                        <FaCar className="me-2" />
                                         <span><strong>Vehicle: </strong>{driver.vehicleInfo}</span>
                                     </div>
 
@@ -95,6 +95,12 @@ export default function DriverSearch() {
                                             <FaMapMarkerAlt className="mb-1 me-1" /> {driver.location}
                                         </Badge>
                                     </div>
+                                    <div className="mb-2 d-flex align-items-center text-muted">
+                                    <FaStar className="me-2 text-warning" />
+                                    <span><strong>Rating: </strong>{driver.avgRating || "0.0"} (<strong>Reviewer: </strong>{driver.totalReviews || 0})</span>
+                                    </div>
+
+
 
                                     <Button
                                         variant="success"

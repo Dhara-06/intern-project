@@ -23,14 +23,54 @@ router.get("/search", async (req, res) => {
     }
 });
 
+import Feedback from "../models/Feedback.js"; // ✅ Make sure this import exists
+
 router.get("/getAll", async (req, res) => {
     try {
-        const drivers = await Driver.find();
-        res.json(drivers);
+        const drivers = await Driver.find().lean(); // use lean() for better performance
+
+        // Aggregate feedback
+        const feedbacks = await Feedback.aggregate([
+            {
+                $group: {
+                    _id: "$driverId", // group by driverId
+                    avgRating: { $avg: "$rating" },
+                    totalReviews: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Convert feedbacks into a map for quick lookup
+        const ratingMap = {};
+        feedbacks.forEach(item => {
+            ratingMap[item._id.toString()] = {
+                avgRating: item.avgRating.toFixed(1),
+                totalReviews: item.totalReviews
+            };
+        });
+
+        // Merge rating info into each driver
+        const driversWithRatings = drivers.map(driver => {
+            const rating = ratingMap[driver._id.toString()] || {
+                avgRating: "0.0",
+                totalReviews: 0
+            };
+            return {
+                ...driver,
+                avgRating: rating.avgRating,
+                totalReviews: rating.totalReviews
+            };
+        });
+
+        res.json(driversWithRatings);
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error in /getAll:", err); // ✅ Log the error
+        res.status(500).json({ error: "Something went wrong" });
     }
 });
+
+
 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
