@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 export default function CustomerRegister() {
     const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ export default function CustomerRegister() {
         paymentDetails: ""
     });
     const [message, setMessage] = useState("");
+    const navigate=useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,6 +22,7 @@ export default function CustomerRegister() {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/register/customer", formData);
             setMessage(res.data.message || "Customer registered successfully!");
+            setTimeout(() =>navigate(`/customer-login?email=${encodeURIComponent(formData.email)}`), 2000);
             setFormData({ name: "", email: "", password: "", paymentDetails: "" });
         } catch (err) {
             setMessage(err.response?.data?.error || "Something went wrong");

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 export default function DriverRegister() {
+    const navigate=useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -25,6 +26,7 @@ export default function DriverRegister() {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/register/driver", formData);
             setMessage(res.data.message || "Driver registered successfully!");
+            setTimeout(() =>navigate(`/driver-login?email=${encodeURIComponent(formData.email)}`), 2000);
             setFormData({
                 name: "",
                 email: "",

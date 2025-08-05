@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 export default function CustomerLogin() {
-    const [email, setEmail] = useState("");
+    const query=useQuery();
+    const prefilledEmail=query.get("email")||"";
+    const [email, setEmail] = useState(prefilledEmail);
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
