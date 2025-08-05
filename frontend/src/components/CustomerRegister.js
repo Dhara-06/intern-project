@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function CustomerRegister() {
     const [formData, setFormData] = useState({
@@ -77,6 +78,11 @@ export default function CustomerRegister() {
                 <Button variant="primary" type="submit" className="w-100">
                     Register
                 </Button>
+
+                <p className="mt-3">
+                    Already have an account? <Link to="/customer-login">Login here</Link>
+                </p>
+
             </Form>
         </Container>
     );

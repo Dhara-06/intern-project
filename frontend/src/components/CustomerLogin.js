@@ -10,7 +10,7 @@ export default function CustomerLogin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/customer/login", { email, password });
+            const res = await axios.post("http://localhost:5000/api/customers/login", { email, password });
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("name", res.data.name);

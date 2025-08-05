@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, Button, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function AppNavbar() {
@@ -22,6 +22,11 @@ export default function AppNavbar() {
                     <Nav className="me-auto">
                         {!role && (
                             <>
+                                <NavDropdown title="Register" id="register-dropdown">
+                                    <NavDropdown.Item as={Link} to="/register-customer">Customer Register</NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/register-driver">Driver Register</NavDropdown.Item>
+                                </NavDropdown>
+
                                 <Nav.Link as={Link} to="/customer-login">Customer Login</Nav.Link>
                                 <Nav.Link as={Link} to="/driver-login">Driver Login</Nav.Link>
                             </>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function DriverRegister() {
     const [formData, setFormData] = useState({
@@ -132,6 +133,10 @@ export default function DriverRegister() {
                 <Button variant="success" type="submit" className="w-100">
                     Register
                 </Button>
+                <p className="mt-3">
+                    Already registered? <Link to="/driver-login">Login here</Link>
+                </p>
+
             </Form>
         </Container>
     );
