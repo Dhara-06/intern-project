@@ -19,6 +19,11 @@ router.post("/", protect, async (req, res) => {
             return res.status(404).json({ error: "Booking not found or unauthorized" });
         }
 
+        const existing = await Feedback.findOne({ bookingId });
+        if (existing) {
+            return res.status(400).json({ error: "Feedback already submitted for this booking." });
+        }
+
         const feedback = new Feedback({
             bookingId,
             customerId: req.user.id,
