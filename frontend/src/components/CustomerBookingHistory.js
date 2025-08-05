@@ -28,6 +28,7 @@ export default function CustomerBookingHistory() {
                 <thead>
                     <tr>
                         <th>Driver Name</th>
+                        <th>Driver Email</th>
                         <th>Pickup</th>
                         <th>Destination</th>
                         <th>Time Slot</th>
@@ -39,6 +40,7 @@ export default function CustomerBookingHistory() {
                         bookings.map((b) => (
                             <tr key={b._id}>
                                 <td>{b.driverId?.name || "N/A"}</td>
+                                <td>{b.driverId?.email || "N/A"}</td>
                                 <td>{b.pickupLocation}</td>
                                 <td>{b.destination}</td>
                                 <td>{b.timeSlot}</td>

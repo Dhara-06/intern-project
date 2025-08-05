@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function DriverDashboard() {
     const [bookings, setBookings] = useState([]);
-    const driverId = "YOUR_DRIVER_ID_HERE"; // Replace with logged-in driver ID
+   
 
     useEffect(() => {
         fetchBookings();
@@ -38,7 +38,7 @@ export default function DriverDashboard() {
                 <thead>
                     <tr>
                         <th>Customer Name</th>
-                        <th>Email</th>
+                        <th>Customer Email</th>
                         <th>Pickup</th>
                         <th>Destination</th>
                         <th>Time Slot</th>

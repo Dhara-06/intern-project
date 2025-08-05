@@ -31,8 +31,12 @@ export default function Booking() {
         e.preventDefault();
         try {
             const token=localStorage.getItem("token");
+            const{customerName,pickupLocation,destination,timeSlot}=formData;
             const res = await axios.post("http://localhost:5000/api/bookings", {
-                ...formData,
+                customerName,
+                pickupLocation,
+                destination,
+                timeSlot,
                 driverId
             },
             {
