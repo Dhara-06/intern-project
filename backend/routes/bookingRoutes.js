@@ -6,9 +6,16 @@ import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Create booking
-router.post("/", async (req, res) => {
+router.post("/", protect, async (req, res) => {
     try {
-        const { customerName, customerEmail, driverId, pickupLocation, destination, timeSlot } = req.body;
+        if (req.user.role !== "customer") {
+            return res.status(403).json({ error: "Access denied" });
+        }
+
+        const { customerName, pickupLocation, destination, timeSlot, driverId } = req.body;
+
+        // Use logged-in user's email instead of client-provided email
+        const customerEmail = req.user.email;
 
         const driver = await Driver.findById(driverId);
         if (!driver) return res.status(404).json({ error: "Driver not found" });

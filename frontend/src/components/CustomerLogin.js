@@ -14,6 +14,7 @@ export default function CustomerLogin() {
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("name", res.data.name);
+            localStorage.setItem("email", email);
             setMessage("Login successful!");
             window.location.href = "/customer-history";
         } catch (err) {

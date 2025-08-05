@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -7,6 +7,8 @@ export default function Booking() {
     const { state } = useLocation();
     const driverId = state?.driverId || "";
     const driverName = state?.driverName || "";
+    const loggedInEmail = localStorage.getItem("email") ;
+    const [message, setMessage] = useState("");
 
     const [formData, setFormData] = useState({
         customerName: "",
@@ -16,19 +18,27 @@ export default function Booking() {
         timeSlot: ""
     });
 
-    const [message, setMessage] = useState("");
+    useEffect(() => {
+        setFormData(prev => ({ ...prev, customerEmail: loggedInEmail }));
+    }, [loggedInEmail]);
 
     const handleChange = (e) => {
+        if (e.target.name === "customerEmail") return;
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const token=localStorage.getItem("token");
             const res = await axios.post("http://localhost:5000/api/bookings", {
                 ...formData,
                 driverId
-            });
+            },
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
             setMessage(res.data.message);
             setFormData({
                 customerName: "",
@@ -62,8 +72,9 @@ export default function Booking() {
                         type="email"
                         name="customerEmail"
                         value={formData.customerEmail}
-                        onChange={handleChange}
+                        // onChange={handleChange}
                         required
+                        readOnly
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">
