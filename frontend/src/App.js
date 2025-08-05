@@ -6,11 +6,11 @@ import CustomerRegister from "./components/CustomerRegister";
 import DriverRegister from "./components/DriverRegister";
 import DriverSearch from "./components/DriverSearch";
 import Booking from "./components/Booking";
-import Feedback from "./components/Feedback";
 import DriverDashboard from "./components/DriverDashboard";
 import CustomerLogin from "./components/CustomerLogin";
 import CustomerBookingHistory from "./components/CustomerBookingHistory";
 import DriverLogin from "./components/DriverLogin";
+import FeedbackForm from "./components/FeedbackForm";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="/register-driver" element={<DriverRegister />} />
         <Route path="/search-driver" element={<DriverSearch />} />
         <Route path="/booking" element={<Booking />} />
-        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/feedback-form" element={<FeedbackForm />} />
         <Route path="/driver-dashboard" element={<DriverDashboard />} />
         <Route path="/customer-login" element={<CustomerLogin />} />
         <Route path="/customer-history" element={<CustomerBookingHistory />} />

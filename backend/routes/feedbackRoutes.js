@@ -1,26 +1,61 @@
 import express from "express";
 import Feedback from "../models/Feedback.js";
-import { protect } from "../middleware/authMiddleware.js"; // Assuming this exists to protect routes
+import Booking from "../models/Booking.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Add feedback (customer only)
 router.post("/", protect, async (req, res) => {
-  const { bookingId, driverId, rating, comment } = req.body;
+    try {
+        if (req.user.role !== "customer") {
+            return res.status(403).json({ error: "Access denied" });
+        }
 
+        const { bookingId, rating, comment } = req.body;
 
-  try {
-    const feedback = new Feedback({
-      bookingId,
-      driverId,
-      customerId: req.user.id, 
-      rating,
-      comment
-    });
-    await feedback.save();
-    res.json({ message: "Feedback submitted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+        const booking = await Booking.findById(bookingId);
+        if (!booking || booking.customerEmail !== req.user.email) {
+            return res.status(404).json({ error: "Booking not found or unauthorized" });
+        }
+
+        const feedback = new Feedback({
+            bookingId,
+            customerId: req.user.id,
+            driverId: booking.driverId,
+            rating,
+            comment,
+        });
+
+        await feedback.save();
+        res.status(201).json({ message: "Feedback submitted", feedback });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get feedback for a specific driver
+router.get("/driver/:driverId", async (req, res) => {
+    try {
+        const feedbacks = await Feedback.find({ driverId: req.params.driverId }).populate("customerId", "name");
+        res.json(feedbacks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.get("/booking/:bookingId", async (req, res) => {
+    try {
+        const feedback = await Feedback.findOne({ bookingId: req.params.bookingId })
+            .populate("customerId", "name email");
+        
+        if (!feedback) return res.status(404).json({ message: "No feedback found" });
+
+        res.json(feedback);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 export default router;

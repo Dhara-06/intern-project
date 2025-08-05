@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Badge } from "react-bootstrap";
+import { Container, Table, Badge, Button, Modal } from "react-bootstrap";
 import axios from "axios";
+import FeedbackForm from "./FeedbackForm";
 
 export default function CustomerBookingHistory() {
     const [bookings, setBookings] = useState([]);
-
+    const [showModal, setShowModal] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState(null);
+    const [feedbackMessage, setFeedbackMessage] = useState("");
     useEffect(() => {
         fetchBookings();
     }, []);
@@ -21,9 +24,23 @@ export default function CustomerBookingHistory() {
         }
     };
 
+    const handleOpenFeedback = (booking) => {
+        setSelectedBooking(booking);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedBooking(null);
+        setFeedbackMessage("");
+    };
+
     return (
         <Container className="mt-4">
             <h3>My Booking History</h3>
+            {feedbackMessage && (
+                <div className="alert alert-success">{feedbackMessage}</div>
+            )}
             <Table bordered hover responsive>
                 <thead>
                     <tr>
@@ -33,6 +50,7 @@ export default function CustomerBookingHistory() {
                         <th>Destination</th>
                         <th>Time Slot</th>
                         <th>Status</th>
+                        <th>Feedback</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,10 +65,17 @@ export default function CustomerBookingHistory() {
                                 <td>
                                     <Badge bg={
                                         b.status === "Pending" ? "warning" :
-                                        b.status === "Confirmed" ? "success" : "danger"
+                                            b.status === "Confirmed" ? "success" : "danger"
                                     }>
                                         {b.status}
                                     </Badge>
+                                </td>
+                                <td>
+                                    {b.status === "Confirmed" && (
+                                        <Button variant="info" size="sm" onClick={() => handleOpenFeedback(b)}>
+                                            Feedback
+                                        </Button>
+                                    )}
                                 </td>
                             </tr>
                         ))
@@ -61,6 +86,21 @@ export default function CustomerBookingHistory() {
                     )}
                 </tbody>
             </Table>
+            <Modal show={showModal} onHide={handleCloseModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Feedback for {selectedBooking?.driverId?.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedBooking && (
+                        <FeedbackForm
+                            bookingId={selectedBooking._id}
+                            driverId={selectedBooking.driverId._id}
+                            onClose={handleCloseModal}
+                            setParentMessage={setFeedbackMessage}
+                        />
+                    )}
+                </Modal.Body>
+            </Modal>
         </Container>
     );
 }
