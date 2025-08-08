@@ -9,7 +9,7 @@ export default function AppNavbar() {
 
     const handleLogout = () => {
         localStorage.clear();
-        navigate("/"); // Redirect to home/login
+        navigate("/"); 
     };
 
     return (
@@ -23,7 +23,7 @@ export default function AppNavbar() {
                     <Nav className="me-auto">
                         {!role && (
                             <>
-                                <NavDropdown title={<><FaUserPlus className="mb-1 me-1" /> Register</>} id="register-dropdown" menuVariant="dark">
+                                <NavDropdown title={<><FaUserPlus className="mb-1 me-1" /> Register</>} id="register-dropdown" menuVariant="light">
                                     <NavDropdown.Item as={Link} to="/register-customer" className="fw-semibold">
                                         <FaUser className="me-2" /> Customer Register
                                     </NavDropdown.Item>
