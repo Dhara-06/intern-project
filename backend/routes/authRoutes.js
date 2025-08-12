@@ -13,8 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET
 router.post("/register/customer", async (req, res) => {
     try {
         const { name, email, password, paymentDetails } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const customer = new Customer({ name, email, password: hashedPassword, paymentDetails });
+        const customer = new Customer({ name, email, password, paymentDetails });
         await customer.save();
         res.json({ message: "Customer registered successfully" });
     } catch (err) {
@@ -26,8 +25,7 @@ router.post("/register/customer", async (req, res) => {
 router.post("/register/driver", async (req, res) => {
     try {
         const { name, email, password, experience, licenseNumber, vehicleInfo, availability, location } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const driver = new Driver({ name, email, password: hashedPassword, experience, licenseNumber, vehicleInfo, availability, location });
+        const driver = new Driver({ name, email, password, experience, licenseNumber, vehicleInfo, availability, location });
         await driver.save();
         res.json({ message: "Driver registered successfully" });
     } catch (err) {

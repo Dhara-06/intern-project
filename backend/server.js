@@ -5,7 +5,8 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import driverRoutes from "./routes/driverRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
-
+import customerRoutes from "./routes/customerRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -14,7 +15,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/drivers", driverRoutes);
 app.use("/api/bookings", bookingRoutes);
-
+app.use("/api/customers", customerRoutes);
+app.use("/api/feedback", feedbackRoutes);
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log("MongoDB Connected"))
 .catch(err => console.log(err));

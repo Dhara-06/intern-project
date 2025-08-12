@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Badge } from "react-bootstrap";
+import { Container, Table, Button, Badge, Modal } from "react-bootstrap";
 import axios from "axios";
 
 export default function DriverDashboard() {
     const [bookings, setBookings] = useState([]);
-    const driverId = "YOUR_DRIVER_ID_HERE"; // Replace with logged-in driver ID
+    const [showModal, setShowModal] = useState(false);
+    const [feedbackData, setFeedbackData] = useState(null);
+    const [modalTitle, setModalTitle] = useState("");
 
     useEffect(() => {
         fetchBookings();
@@ -31,6 +33,19 @@ export default function DriverDashboard() {
         }
     };
 
+    const handleViewFeedback = async (booking) => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/feedback/booking/${booking._id}`);
+            setFeedbackData(res.data);
+            setModalTitle(`Feedback from ${res.data.customerId?.name || "Customer"}`);
+        } catch (err) {
+            setFeedbackData(null);
+            setModalTitle("No Feedback Found");
+        } finally {
+            setShowModal(true);
+        }
+    };
+
     return (
         <Container className="mt-4">
             <h3>Driver Dashboard</h3>
@@ -38,7 +53,7 @@ export default function DriverDashboard() {
                 <thead>
                     <tr>
                         <th>Customer Name</th>
-                        <th>Email</th>
+                        <th>Customer Email</th>
                         <th>Pickup</th>
                         <th>Destination</th>
                         <th>Time Slot</th>
@@ -83,6 +98,16 @@ export default function DriverDashboard() {
                                             </Button>
                                         </>
                                     )}
+                                    {b.status === "Confirmed" && (
+                                        <Button
+                                            variant="info"
+                                            size="sm"
+                                            className="mt-1"
+                                            onClick={() => handleViewFeedback(b)}
+                                        >
+                                            View Feedback
+                                        </Button>
+                                    )}
                                 </td>
                             </tr>
                         ))
@@ -93,6 +118,27 @@ export default function DriverDashboard() {
                     )}
                 </tbody>
             </Table>
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalTitle}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {feedbackData ? (
+                        <>
+                            <p><strong>Rating:</strong> {feedbackData.rating} ⭐</p>
+                            <p><strong>Comment:</strong></p>
+                            <p>{feedbackData.comment || "No comment provided."}</p>
+                        </>
+                    ) : (
+                        <p>No feedback has been submitted for this booking yet.</p>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }
